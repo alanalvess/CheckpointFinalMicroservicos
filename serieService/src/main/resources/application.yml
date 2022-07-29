@@ -1,0 +1,31 @@
+spring:
+  application:
+    name: series-service
+
+  zipkin:
+    base-url: http://zipkin-service:9411/
+
+  config:
+    import: optional:configserver:http://config-service:8888
+
+eureka:
+  instance:
+    hostname: ${spring.application.name}
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defautZone: http://eureka-service:8761/eureka/
+
+queue:
+  series-service:
+    name: SeriesServiceQueue
+message: Serie service is up
+
+info:
+  app:
+    name: ${spring.application.name}
+    version: 1.0.0
+    description: Serie Service Application
+  svc:
+    port: ${server.port}

@@ -1,0 +1,37 @@
+spring:
+  application:
+    name: movie-service
+
+  zipkin:
+    base-url: http://zipkin-service:9411/
+
+  datasource:
+    url: jdbc:mysql://database-service:3306/movie-service?createDatabaseIfNotExist=true&serverTimezone=UTC-3&useSSl=false
+    username: movieService # Alterar as credenciais para o ambiente local
+    password: aStrongPassword
+
+  config:
+    import: optional:configserver:http://config-service:8888
+
+eureka:
+  instance:
+    hostname: ${spring.application.name}
+  client:
+    registerWithEureka: true
+    fetchRegistry: true
+    serviceUrl:
+      defaultZone: http://eureka-service:8761/eureka/
+
+queue:
+  movie-service:
+    name: MovieServiceQueue
+
+message: Movie service is up
+
+info:
+  app:
+    name: ${spring.application.name}
+    version: 1.0.0
+    description: Movie Service Application
+  svc:
+    port: ${server.port}

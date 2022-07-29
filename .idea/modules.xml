@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/ApiGateway/ApiGateway.iml" filepath="$PROJECT_DIR$/ApiGateway/ApiGateway.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/avaliacaoFinalBackend.iml" filepath="$PROJECT_DIR$/.idea/avaliacaoFinalBackend.iml" />
+      <module fileurl="file://$PROJECT_DIR$/catalogService/catalogService.iml" filepath="$PROJECT_DIR$/catalogService/catalogService.iml" />
+      <module fileurl="file://$PROJECT_DIR$/configServer/configServer.iml" filepath="$PROJECT_DIR$/configServer/configServer.iml" />
+      <module fileurl="file://$PROJECT_DIR$/eurekaServer/eurekaServer.iml" filepath="$PROJECT_DIR$/eurekaServer/eurekaServer.iml" />
+      <module fileurl="file://$PROJECT_DIR$/gateway/gateway.iml" filepath="$PROJECT_DIR$/gateway/gateway.iml" />
+      <module fileurl="file://$PROJECT_DIR$/movieService/movieService.iml" filepath="$PROJECT_DIR$/movieService/movieService.iml" />
+      <module fileurl="file://$PROJECT_DIR$/serieService/serieService.iml" filepath="$PROJECT_DIR$/serieService/serieService.iml" />
+    </modules>
+  </component>
+</project>

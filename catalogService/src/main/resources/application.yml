@@ -1,0 +1,34 @@
+spring:
+  application:
+    name: catalog-service
+
+  zipkin:
+    base-url: http://zipkin-service:9411/
+
+  config:
+    import: optional:configServer:http://config-service:8888
+
+eureka:
+  instance:
+    hostname: ${spring.application.name}
+  client:
+    registerWithEureka: true
+    fetchRegistry: true
+    serviceUrl:
+      defaultZone: http://eureka-service:8761/eureka/
+
+queue:
+  movie-service:
+    name: MovieServiceQueue
+  series-service:
+    name: SeriesServiceQueue
+
+message: Catalog service is up
+
+info:
+  app:
+    name: ${spring.application.name}
+    version: 1.0.0
+    description: Catalog Service Application
+  svc:
+    port: ${server.port}

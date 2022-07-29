@@ -1,0 +1,43 @@
+spring:
+
+  cloud:
+    ineutils:
+      timeout-seconds: 10
+      
+  zipikin:
+    base-url: http://zipikin-service:9411/
+
+  rabbitmq:
+    username: guest
+    password: guest
+    host: rabbitmq-service
+    port: 5672
+
+eureka:
+  instance:
+    hostname: ${spring.application.name}
+  client:
+    registerWithEureka: true
+    fetchRegistry: true
+    serviceUrl:
+      defaultZone: http://eureka-service:8761/eureka/
+
+management:
+  info:
+    env:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: health,info,actuator
+
+info:
+  author: Alan Alves
+  mail: alan.alvess@outlook.com
+server:
+  port: ${PORT:8091}
+message: Configurações Genéricas
+
+logging:
+  level:
+    org.springframework.cloud.commons.util.InetUtils: trace

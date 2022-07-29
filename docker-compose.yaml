@@ -1,0 +1,128 @@
+version: "3.2"
+services:
+
+  database-service:
+    image: mysql
+    restart: always
+    container_name: database-service
+    environment:
+      MYSQL_DATABASE: 'movie-service'
+      MYSQL_USER: 'movieService'
+      MYSQL_PASSWORD: 'aStrongPassword'
+      MYSQL_ROOT_PASSWORD: 'anotherStrongPassword'
+    ports:
+      - "3306:3306"
+    volumes:
+      - db-mysql-volume:/var/lib/mysql
+    networks:
+      - servidores
+
+  mongo-service:
+    image: mongo
+    restart: always
+    container_name: mongo-service
+    ports:
+      - "27017:27017"
+    networks:
+      - servidores
+
+  eureka-service:
+    tty: true
+    container_name: eureka-service
+    build: eurekaServer
+    ports:
+      - "8761:8761"
+    networks:
+      - servidores
+
+  config-service:
+    tty: true
+    container_name: config-service
+    build: configServer
+    ports:
+      - "8888:8888"
+    depends_on:
+      - eureka-service
+    networks:
+      - servidores
+
+  zipkin-service:
+    container_name: zipkin-service
+    image: openzipkin/zipkin
+    ports:
+      - "9411:9411"
+    networks:
+      - servidores
+
+  rabbitmq-service:
+    container_name: rabbitmq-service
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - servidores
+
+  gateway-service:
+    tty: true
+    container_name: gateway-service
+    build: gateway
+    ports:
+      - "8080:8080"
+    depends_on:
+      - eureka-service
+      - config-service
+    networks:
+      - servidores
+
+  movie-service:
+    tty: true
+    container_name: movie-service
+    build: movieService
+    ports:
+      - "8082:8082"
+    depends_on:
+      - eureka-service
+      - config-service
+      - database-service
+      - rabbitmq-service
+      - zipkin-service
+    networks:
+      - servidores
+
+  series-service:
+    tty: true
+    container_name: series-service
+    build: serieService
+    ports:
+      - "8092:8092"
+    depends_on:
+      - eureka-service
+      - config-service
+      - rabbitmq-service
+      - zipkin-service
+      - mongo-service
+    networks:
+      - servidores
+
+  catalog-service:
+    tty: true
+    container_name: catalog-service
+    build: catalogService
+    ports:
+      - "8072:8072"
+    depends_on:
+      - eureka-service
+      - config-service
+      - rabbitmq-service
+      - zipkin-service
+      - mongo-service
+    networks:
+      - servidores
+
+networks:
+  servidores:
+    driver: bridge
+
+volumes:
+  db-mysql-volume: {}

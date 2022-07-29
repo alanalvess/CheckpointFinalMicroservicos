@@ -1,0 +1,42 @@
+server:
+  port: 8888
+
+spring:
+  application:
+    name: config-service
+
+  zipkin:
+    base-url: http://zipkin-service:9411/
+
+  rabbitmq:
+    host: rabbitmq
+    username: guest
+    password: guest
+
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/alanalvess/CheckpointfinalBackendII.git
+          default-label: main
+          search-paths:
+            - 'configs*'
+          timeout: 5
+
+eureka:
+  instance:
+    hostname: ${spring.application.name}
+  client:
+    registerWithEureka: true
+    fetchRegistry: true
+    serviceUrl:
+      defaultZone: http://eureka-service:8761/eureka/
+
+management:
+  info:
+    env:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: health,info,actuator
