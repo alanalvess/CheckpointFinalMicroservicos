@@ -1,0 +1,4 @@
+com\dh\gateway\controller\FallBackController.class
+com\dh\gateway\GatewayApplication.class
+com\dh\gateway\config\SecurityConfig.class
+com\dh\gateway\controller\TestController.class
