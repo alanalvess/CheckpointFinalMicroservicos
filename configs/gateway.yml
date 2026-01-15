@@ -7,8 +7,8 @@ spring:
       client:
         registration:
           google:
-            client-id: 911693211107-46beaj8vkbb72lbks7k0eeegs1esthrg.apps.googleusercontent.com
-            client-secret: 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
+            client-id: ${CLIENT_ID}
+            client-secret: ${CLIENT_SECRET}
             scope: openid
             redirect-uri: http://localhost:8080/login/oauth2/code/google
 
