@@ -32,5 +32,5 @@ Utilizando o Spring Cloud, implementar a seguinte arquitetura de microserviços:
 
 - `GET`   - `http://localhost:8080/movies/{genre}` para trazer filmes por gênero
 - `GET`   - `http://localhost:8080/series/{genre}` para trazer series por gênero
-- 
+
 - `GET`   - `http://localhost:8080/catalog/{genre}` retorna o catalogo de filmes por gênero.
