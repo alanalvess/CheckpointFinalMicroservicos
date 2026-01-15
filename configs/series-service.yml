@@ -2,6 +2,11 @@ server:
   port: 8092
   
 spring:
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+
   zipikin:
     base-url: http://zipikin-service:9411/
 
@@ -11,20 +16,50 @@ spring:
     host: rabbitmq-service
     port: 5672
 
-  data:
-    mongodb:
-      host: mongo-service
-      port: 27017
-      database: serieServiceDB
+## Resilience4J configs for CircuitBreaker Pattern
+resilience4j:
+  circuitbreaker:
+    instances:
+      serie-service:
+        allowHealthIndicatorToFail: false
+        registerHealthIndicator: true
+        slidingWindowType: COUNT_BASED
+        slidingWindowSize: 5
+        failueRateThreshold: 50
+        waitDurationInOpenState: 50s
+        permittedNumberOfCalssInHalfOpenState: 3
+        automaticTransitionFromOpenToHalfIfOpenEnabled: true
+
+  retry:
+    instances:
+      serie-service:
+        maxAttempts: 3
+        waitDuration: 10s
+
+        retryExceptions:
+          - feign.FeignException$InternalServerError
+          - org.springframework.web.client.HttpServerErrorException
+          - java.util.concurrent.TimeoutException
+          - java.io.IOException
 
 info:
   name: Series service application!
 
 management:
-  info:
-    env:
-      enabled: true
   endpoints:
     web:
       exposure:
-        include: health,info,actuator
+        include: circuitbreakers,circuitbreakerevents,health,info,actuator
+  info:
+    env:
+      enabled: true
+
+  health:
+    circuitbreakers:
+      enabled: true
+
+  endpoint:
+    info:
+      enabled: true
+    health:
+      show-details: always

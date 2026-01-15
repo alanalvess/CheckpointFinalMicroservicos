@@ -17,19 +17,19 @@ spring:
     config:
       server:
         git:
-          uri: https://github.com/alanalvess/CheckpointfinalBackendII.git
+          uri: https://github.com/alanalvess/CheckpointFinalMicroservicos.git
           default-label: main
           search-paths:
-            - 'configs*'
+            - configs
           timeout: 5
 
 eureka:
   instance:
     hostname: ${spring.application.name}
   client:
-    registerWithEureka: true
-    fetchRegistry: true
-    serviceUrl:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
       defaultZone: http://eureka-service:8761/eureka/
 
 management:
@@ -39,4 +39,4 @@ management:
   endpoints:
     web:
       exposure:
-        include: health,info,actuator
+        include: health,info

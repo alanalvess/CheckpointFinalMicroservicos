@@ -16,7 +16,6 @@ spring:
     host: rabbitmq-service
     port: 5672
 
-
 ## Resilience4J configs for CircuitBreaker Pattern
 resilience4j:
   circuitbreaker:
@@ -31,7 +30,6 @@ resilience4j:
         permittedNumberOfCalssInHalfOpenState: 3
         automaticTransitionFromOpenToHalfIfOpenEnabled: true
 
-
   retry:
     instances:
       movie-service:
@@ -43,6 +41,9 @@ resilience4j:
           - org.springframework.web.client.HttpServerErrorException
           - java.util.concurrent.TimeoutException
           - java.io.IOException
+
+info:
+  name: Movies service application!
 
 management:
   endpoints:

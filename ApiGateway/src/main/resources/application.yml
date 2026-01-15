@@ -1,0 +1,143 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: gateway
+
+  zipkin:
+    base-url: http://zipkin-service:9411/
+
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${CLIENT_ID}
+            client-secret: ${CLIENT_SECRET}
+            scope: openid
+            redirect-uri: http://localhost:8080/login/oauth2/code/google
+
+  cloud:
+    gateway:
+      server:
+        webflux:
+          default-filters:
+            - TokenRelay
+
+          routes:
+            - id: movie-service
+              uri: lb://MOVIE-SERVICE
+              predicates:
+                - Path=/movies/**
+              filters:
+                - name: CircuitBreaker
+                  args:
+                    name: moviesServiceCircuitBreaker
+                    fallbackUri: forward:/fallback/movieServiceFallBack
+
+            - id: catalog-service
+              uri: lb://CATALOG-SERVICE
+              predicates:
+                - Path=/catalog/**
+              filters:
+                - name: CircuitBreaker
+                  args:
+                    name: catalogServiceCircuitBreaker
+                    fallbackUri: forward:/fallback/catalogServiceFallBack
+
+            - id: serie-service
+              uri: lb://SERIE-SERVICE
+              predicates:
+                - Path=/series/**
+              filters:
+                - name: CircuitBreaker
+                  args:
+                    name: seriesServiceCircuitBreaker
+                    fallbackUri: forward:/fallback/serieServiceFallBack
+
+  config:
+    import: optional:configserver:http://config-service:8888
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      moviesServiceCircuitBreaker:
+        allow-health-indicator-to-fail: false
+        register-health-indicator: true
+        sliding-window-type: COUNT_BASED
+        sliding-window-size: 5
+        failure-rate-threshold: 50
+        wait-duration-in-open-state: 50s
+        permitted-number-of-calls-in-half-open-state: 3
+        automatic-transition-from-open-to-half-open-enabled: true
+
+      seriesServiceCircuitBreaker:
+        allow-health-indicator-to-fail: false
+        register-health-indicator: true
+        sliding-window-type: COUNT_BASED
+        sliding-window-size: 5
+        failure-rate-threshold: 50
+        wait-duration-in-open-state: 50s
+        permitted-number-of-calls-in-half-open-state: 3
+        automatic-transition-from-open-to-half-open-enabled: true
+
+      catalogServiceCircuitBreaker:
+        allow-health-indicator-to-fail: false
+        register-health-indicator: true
+        sliding-window-type: COUNT_BASED
+        sliding-window-size: 5
+        failure-rate-threshold: 50
+        wait-duration-in-open-state: 50s
+        permitted-number-of-calls-in-half-open-state: 3
+        automatic-transition-from-open-to-half-open-enabled: true
+
+  retry:
+    instances:
+      moviesServiceCircuitBreaker:
+        max-attempts: 3
+        wait-duration: 10s
+
+        retry-exceptions:
+          - feign.FeignException
+          - org.springframework.web.client.HttpServerErrorException
+          - java.util.concurrent.TimeoutException
+          - java.io.IOException
+
+      seriesServiceCircuitBreaker:
+        max-attempts: 3
+        wait-duration: 10s
+
+        retry-exceptions:
+          - feign.FeignException
+          - org.springframework.web.client.HttpServerErrorException
+          - java.util.concurrent.TimeoutException
+          - java.io.IOException
+
+      catalogServiceCircuitBreaker:
+        max-attempts: 3
+        wait-duration: 10s
+
+        retry-exceptions:
+          - feign.FeignException
+          - org.springframework.web.client.HttpServerErrorException
+          - java.util.concurrent.TimeoutException
+          - java.io.IOException
+
+eureka:
+  instance:
+    hostname: ${spring.application.name}
+
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://eureka-service:8761/eureka/
+
+info:
+  app:
+    name: ${spring.application.name}
+    version: 1.0.0
+    description: Gateway Service Application
+  svc:
+    port: ${server.port}
